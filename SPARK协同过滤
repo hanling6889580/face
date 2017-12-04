@@ -1,0 +1,92 @@
+#encoding=utf-8
+from pyspark import SparkConf,SparkContext
+from pyspark.sql import SQLContext,Row
+conf=SparkConf().setMaster('local').setAppName('guiyang')
+sc=SparkContext(conf=conf)
+sqc=SQLContext(sc)
+data = sc.textFile('file')
+#显示数据结构(客户ID，产品ID，产品评分）均为 数字 类型
+#基于用户评分的协同过滤推荐
+#找出对相同产品有类似评分的用户组，推荐用户组中的其他客户评价较高的产品
+from pyspark.mllib.recommendation import ALS
+model = ALS.train(data,50,10,0.01)
+model.recommendProducts(userid,K)
+ALLyuce=model.recommendProductsForUsers(num)
+ALLyuce.coalesce(1).sample(False, 3).saveAsTextFile('/home/yuceceshi.txt')
+
+
+#隐式数据结构（客户ID，产品ID，X） X:（是否购买，行为权重（可以负数 ））
+#基于用户行为协同过滤推荐
+#找出对相同产品有类似行为的用户组，推荐用户组中的其他客户行为较多的产品
+model = ALS.trainImplicit(data,50,10,0.01)
+model.recommendProducts(userid,K)
+
+#用户注册信息特征数据结构（客户ID，感兴趣类别）
+#推荐客户属于客户兴趣类别的产品（50%为销量大的产品，50%随机产品）
+#直接从后台销售数据表中提前
+
+
+####基于图书相似度推荐 sim(user, item) = 文本相似度(user, item) * 词权
+#
+#
+
+#基于用户历史特征或行为推荐 	基于内容的推荐：基于用户过去喜欢的产品，推荐现在与此类产品类似的产品。
+#算法实现：朴素贝叶斯算法。
+#多项式贝叶斯
+#特征：用户过去的行为特征，例如用户行为种类（收藏，浏览，购买，退货，搜索），商品种类或名称，行为次数，
+
+
+
+#购买了该商品的用户还购买了#
+#用户ID，商品ID，推荐商品
+#用户进入 先找出买过这个商品的全部用户 select * from A where product = 该商品;
+#在所有用户中找出都买过什么商品 并按（成交数量*评分/同类商品总数）排序 select product ,score（成交数量*评分/同类商品总数）from A order by score limit 10; 
+#输出前10名商品作为推荐
+
+
+
+
+>>> import numpy as np
+    >>> X = np.random.randint(5, size=(6, 100))
+    >>> y = np.array([1, 2, 3, 4, 5, 6])
+    >>> from sklearn.naive_bayes import MultinomialNB
+    >>> clf = MultinomialNB()
+    >>> clf.fit(X, y)
+    MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+    >>> print(clf.predict(X[2:3]))
+
+#把结果加入mysql
+import pymysql
+conn = pymysql.connect(
+            host='192.168.0.211', 
+            port=3306, 
+            user='root', 
+            passwd='root', 
+            db='test',
+            use_unicode=1,
+            charset='utf8')
+
+try:
+    with conn.cursor() as cursor:
+                #create a table
+		sql = """CREATE TABLE IF NOT EXISTS %s (
+                            text  VARCHAR(200),
+                            time  VARCHAR(200),
+                            date VARCHAR(200))""" % (table,)
+        cursor.execute(sql)
+                # Create a new record
+        sql = "INSERT INTO %s (%s,%s,%s) VALUES (%s,%s,%s)" % (table, 'text', 'date', 'time', text, date, time_now)
+        cursor.execute(sql)
+                # connection is not autocommit by default. So you must commit to save
+                # your changes.
+        conn.commit()
+Create external table rizhi3 (
+huoqu_date Date,
+ from_ip string,
+ user_id string,
+ yemian string,
+ user_laiyuan string,
+ shifoudenglu string) 
+row format delimited fields terminated by '^A' lines terminated by '\n' ;
+
+	INSERT INTO rizhi (aa,user_id,yemian,user_laiyuan,shifoudenglu) values ('2017-07-02 09:09:09','1','2','3','4');  		
